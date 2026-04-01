@@ -1,0 +1,55 @@
+Resolved merge conflicts
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Wed Apr 1 14:49:22 2026 +0530
+#
+# On branch main
+# Your branch is up to date with 'origin/main'.
+#
+# Last command done (1 command done):
+#    pick bcc5e8f Initial commit
+# No commands remaining.
+# You are currently editing a commit while rebasing branch 'main' on '8d2355d'.
+#
+# Changes to be committed:
+#	new file:   .github/workflows/ci.yml
+#	modified:   LICENSE
+#	modified:   README.md
+#	modified:   app/Config/Menu.php
+#	modified:   app/Config/Routes.php
+#	modified:   app/Config/ShopOwnerMenu.php
+#	modified:   app/Controllers/Admin/AdminController.php
+#	new file:   app/Controllers/Admin/CategoryController.php
+#	new file:   app/Controllers/Admin/ProductController.php
+#	new file:   app/Controllers/Admin/ShopController.php
+#	modified:   app/Controllers/ShopOwner/Auth.php
+#	new file:   app/Controllers/ShopOwner/ProductController.php
+#	modified:   app/Controllers/ShopOwner/ShopController.php
+#	new file:   app/Database/Migrations/2026-04-01-102631_CreateShopOwnersTable.php
+#	new file:   app/Database/Migrations/2026-04-01-113207_AddRoleToShopOwners.php
+#	new file:   app/Database/Migrations/2026-04-01-215601_AddUpdatedAtToProducts.php
+#	modified:   app/Filters/AuthFilter.php
+#	modified:   app/Filters/PermissionFilter.php
+#	modified:   app/Models/Products.php
+#	new file:   app/Models/ShopOwners.php
+#	new file:   app/Views/Admin/categories/index.php
+#	new file:   app/Views/Admin/products/index.php
+#	new file:   app/Views/Admin/shops/index.php
+#	new file:   app/Views/ShopOwner/auth/login.php
+#	modified:   app/Views/ShopOwner/auth/register.php
+#	modified:   app/Views/ShopOwner/dashboard/index.php
+#	modified:   app/Views/ShopOwner/layouts/layoutShopOwner.php
+#	new file:   app/Views/ShopOwner/products/create.php
+#	new file:   app/Views/ShopOwner/products/edit.php
+#	new file:   app/Views/ShopOwner/products/index.php
+#	new file:   app/Views/ShopOwner/shop/create.php
+#	new file:   app/Views/ShopOwner/shop/edit.php
+#	new file:   app/Views/ShopOwner/shop/index.php
+#	modified:   app/Views/welcome_message.php
+#	new file:   public/uploads/products/1775080435_8932b9d7f96e9a92f77b.jpg
+#	new file:   public/uploads/products/1775080669_08dfb20a7c48f8b7f9b5.jpg
+#	new file:   public/uploads/products/1775083373_135e34f040c7a1ddaa94.jpg
+#	new file:   public/uploads/products/index.html
+#

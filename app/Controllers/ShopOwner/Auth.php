@@ -3,7 +3,7 @@
 namespace App\Controllers\ShopOwner;
 
 use App\Controllers\BaseController;
-use App\Models\Users;
+use App\Models\ShopOwners;
 
 class Auth extends BaseController
 {
@@ -15,14 +15,14 @@ class Auth extends BaseController
     public function registerPost()
     {
         try {
-            $Users = new Users();
+            $Users = new ShopOwners();
 
             $data = [
                 'name' => $this->request->getPost('name'),
                 'email' => $this->request->getPost('email'),
                 'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
                 'role' => 'shop_owner',
-                'status' => 1
+                'status' => 0
             ];
 
             $Users->insert($data);
@@ -42,7 +42,7 @@ class Auth extends BaseController
     public function loginPost()
     {
         try {
-            $Users = new Users();
+            $Users = new ShopOwners();
 
             $email = $this->request->getPost('email');
             $password = $this->request->getPost('password');
@@ -58,10 +58,11 @@ class Auth extends BaseController
             session()->set([
                 'user_id' => $user['id'],
                 'role' => $user['role'],
-                'isLoggedIn' => true
+                'status'    => $user['status'],
+                'logged_in' => true
             ]);
-
-            return redirect()->to('/shop/dashboard');
+             log_message('error', 'redirect to /shop_owner/dashboard ');
+            return redirect()->to('/shop_owner/dashboard');
 
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', $e->getMessage());
@@ -72,7 +73,7 @@ class Auth extends BaseController
     {
         try {
             session()->destroy();
-            return redirect()->to('/shopOwner/login');
+            return redirect()->to('/');
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Logout failed');

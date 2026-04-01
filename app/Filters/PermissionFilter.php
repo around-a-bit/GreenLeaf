@@ -51,7 +51,7 @@ class PermissionFilter implements FilterInterface
 public function before(RequestInterface $request, $arguments = null)
 {
     if (!session()->get('logged_in')) {
-        return redirect()->to('/admin/login');
+        return redirect()->to('/');
     }
 
     $role  = session('role');
@@ -68,6 +68,7 @@ public function before(RequestInterface $request, $arguments = null)
     if ($arguments) {
 
         $requiredPermission = $arguments[0];
+         log_message('info', 'Permission is checking for: ' . $requiredPermission);
 
         if (!in_array($requiredPermission, $menus)) {
             log_message('info', 'Permission denied: ' . $requiredPermission);

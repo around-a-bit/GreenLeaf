@@ -47,24 +47,26 @@ $routes->group('customer', ['filter' => 'auth:customer'], function ($routes) {
 });
 
 // SHOP OWNER
-$routes->group('shop', ['filter' => 'auth:shop'], function ($routes) {
+$routes->group('shop_owner', ['filter' => 'auth:shop_owner'], function ($routes) {
 
     // Dashboard
-    $routes->get('dashboard', 'Shop\Dashboard::index');
+    $routes->get('dashboard', 'ShopOwner\DashboardController::index');
 
     // Shop Setup (VERY IMPORTANT)
-    $routes->get('create-shop', 'Shop\ShopController::create');
-    $routes->post('store-shop', 'Shop\ShopController::store');
+    $routes->get('create-shop', 'ShopOwner\ShopController::create');
+    $routes->post('store-shop', 'ShopOwner\ShopController::store');
 
     // Shop Profile
-    $routes->get('my-shop', 'Shop\ShopController::index');
-    $routes->get('edit-shop/(:num)', 'Shop\ShopController::edit/$1');
-    $routes->post('update-shop/(:num)', 'Shop\ShopController::update/$1');
+    $routes->get('my-shop', 'ShopOwner\ShopController::index');
+    $routes->get('edit-shop/(:num)', 'ShopOwner\ShopController::edit/$1');
+    $routes->post('update-shop/(:num)', 'ShopOwner\ShopController::update/$1');
 
     // Products (locked until approved)
-    $routes->get('products', 'Shop\ProductController::index');
-    $routes->get('products/create', 'Shop\ProductController::create');
-    $routes->post('products/store', 'Shop\ProductController::store');
+    $routes->get('products', 'ShopOwner\ProductController::index');
+    $routes->get('products/create', 'ShopOwner\ProductController::create');
+    $routes->post('products/store', 'ShopOwner\ProductController::store');
+
+    $routes->post('logout', 'ShopOwner\Auth::logout');
 
 });
 
@@ -74,15 +76,24 @@ $routes->group('admin', ['filter' => 'auth:super_admin,sub_admin'], function ($r
 
     $routes->get('dashboard', 'Admin\Dashboard::index', ['filter' => 'permission:dashboard']);
 
-    $routes->get('list-admin', 'Admin\AdminController::index', ['filter' => 'permission:admin_management']);
+    $routes->get('list-admin', 'Admin\AdminController::index', ['filter' => 'permission:admins']);
+    $routes->get('create-admin', 'Admin\AdminController::create', ['filter' => 'permission:admins']);
+    $routes->post('store-admin', 'Admin\AdminController::store', ['filter' => 'permission:admins']);
 
-    $routes->get('create-admin', 'Admin\AdminController::create', ['filter' => 'permission:admin_management']);
-
-    $routes->post('store-admin', 'Admin\AdminController::store', ['filter' => 'permission:admin_management']);
-
-    $routes->get('edit-admin/(:num)', 'Admin\AdminController::edit/$1', ['filter' => 'permission']);
-    $routes->post('update-admin/(:num)', 'Admin\AdminController::update/$1', ['filter' => 'permission']);
-
+    $routes->get('edit-admin/(:num)', 'Admin\AdminController::edit/$1', ['filter' => 'permission:admins']);
+    $routes->post('update-admin/(:num)', 'Admin\AdminController::update/$1', ['filter' => 'permission:admins']);
+    // Shop Owner Approval
+    $routes->get('shopOwners', 'Admin\ShopController::index', ['filter' => 'permission:shopOwners']);
+    $routes->post('shopOwners/update-status', 'Admin\ShopController::updateStatus',['filter' => 'permission:shopOwners']);
+    // Product category
+    $routes->get('categories', 'Admin\CategoryController::index', ['filter' => 'permission:categories']);
+    $routes->post('categories/store', 'Admin\CategoryController::store', ['filter' => 'permission:categories']);
+    $routes->post('categories/update/(:num)', 'Admin\CategoryController::update/$1', ['filter' => 'permission:categories']);
+    $routes->post('categories/toggle/(:num)', 'Admin\CategoryController::toggle/$1', ['filter' => 'permission:categories']);
+    // Product approval
+    $routes->get('products', 'Admin\ProductController::index', ['filter' => 'permission:products']);
+    $routes->post('products/update-status', 'Admin\ProductController::updateStatus', ['filter' => 'permission:products']);
+    
     $routes->post('logout', 'Admin\Auth::logout');
 });
 

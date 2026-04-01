@@ -13,15 +13,22 @@ class Products extends Model
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields = [
-        'shop_id','category_id','name','description',
-        'price','discount_price','stock',
-        'is_active','status','deleted_at'
+        'shop_id',
+        'category_id',
+        'name',
+        'description',
+        'price',
+        'discount_price',
+        'stock',
+        'is_active',
+        'status'
     ];
+
 
     protected bool $allowEmptyInserts = false;
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
@@ -35,12 +42,71 @@ class Products extends Model
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
+    protected $beforeInsert = ['setPendingStatus'];
+    protected $beforeUpdate = ['setPendingOnUpdate'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+    public const STATUS_PENDING  = 0;
+    public const STATUS_APPROVED = 1;
+    public const STATUS_REJECTED = 2;
+
+    protected function setPendingOnUpdate(array $data)
+{
+    // ❌ skip if admin is updating
+    if (isset($data['data']['status'])) {
+        return $data;
+    }
+
+    $data['data']['status'] = self::STATUS_PENDING;
+    return $data;
+}
+
+    protected function setPendingStatus(array $data)
+    {
+        $data['data']['status'] = self::STATUS_PENDING;
+        return $data;
+    }
+
+
+    public function approved()
+    {
+        return $this->where('status', self::STATUS_APPROVED);
+    }
+
+    public function pending()
+    {
+        return $this->where('status', self::STATUS_PENDING);
+    }
+
+    public function rejected()
+    {
+        return $this->where('status', self::STATUS_REJECTED);
+    }
+
+
+    public function withCategory()
+    {
+        return $this->select('products.*, categories.name as category_name')
+            ->join('categories', 'categories.id = products.category_id', 'left');
+    }
+    public function withImages()
+    {
+        return $this->select('products.*, product_images.image_path')
+            ->join('product_images', 'product_images.product_id = products.id', 'left')
+            ->groupBy('products.id');
+    }
+    public function forShop($shopId)
+{
+    return $this->where('shop_id', $shopId);
+}
+
+    public function visible()
+    {
+        return $this->where('status', self::STATUS_APPROVED)
+            ->where('is_active', 1);
+    }
 }

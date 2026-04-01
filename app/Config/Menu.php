@@ -34,9 +34,9 @@ public array $menus = [
         'icon'  => 'fa-user-shield'
     ],
 
-    'shops' => [
-        'label' => 'Shops',
-        'route' => 'shops',
+    'shopOwners' => [
+        'label' => 'Shop Owners',
+        'route' => 'shopOwners',
         'icon'  => 'fa-store'
     ],
 
@@ -44,6 +44,12 @@ public array $menus = [
         'label' => 'Customers',
         'route' => 'customers',
         'icon'  => 'fa-users'
+    ],
+
+    'categories' => [
+        'label' => 'Categories',
+        'route' => 'categories',
+        'icon'  => 'fa-gear'
     ],
 
     'products' => [

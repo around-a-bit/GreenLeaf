@@ -102,4 +102,7 @@ public function update($id)
 
     return redirect()->to('/admin/list-admin')->with('success', 'Updated Successfully');
 }
+
+
+
 }
