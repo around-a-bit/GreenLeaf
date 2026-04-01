@@ -6,42 +6,41 @@ use CodeIgniter\Config\BaseConfig;
 
 class ShopOwnerMenu extends BaseConfig
 {
-    public $menus = [
+public array $menus = [
+    'dashboard' => [
+        'route' => 'dashboard',
+        'icon'  => 'fa-home',
+        'label' => 'Dashboard'
+    ],
 
-        'dashboard' => [
-            'label' => 'Registration',
-            'route' => 'dashboard',
-            'icon'  => 'fa-user-check'
-        ],
+    'myshop' => [
+        'route' => 'my-shop',
+        'icon'  => 'fa-store',
+        'label' => 'My Shops'
+    ],
 
-        'products' => [
-            'label' => 'Product management',
-            'route' => 'products',
-            'icon'  => 'fa-leaf'
-        ],
+    'products' => [
+        'route' => 'products',
+        'icon'  => 'fa-box',
+        'label' => 'My Products'
+    ],
 
-        'orders' => [
-            'label' => 'Order management',
-            'route' => 'orders',
-            'icon'  => 'fa-box'
-        ],
+    'orders' => [
+        'route' => 'orders',
+        'icon'  => 'fa-shopping-cart',
+        'label' => 'Orders'
+    ],
 
-        'finance' => [
-            'label' => 'Finance & commission',
-            'route' => 'finance',
-            'icon'  => 'fa-money-bill'
-        ],
+    'finance' => [
+        'route' => 'finance',
+        'icon'  => 'fa-wallet',
+        'label' => 'Finance'
+    ],
 
-        'map' => [
-            'label' => 'Map & location',
-            'route' => 'map',
-            'icon'  => 'fa-map'
-        ],
-
-        'tickets' => [
-            'label' => 'Ticketing & support',
-            'route' => 'tickets',
-            'icon'  => 'fa-headset'
-        ],
-    ];
+    'tickets' => [
+        'route' => 'tickets',
+        'icon'  => 'fa-ticket-alt',
+        'label' => 'Support Tickets'
+    ],
+];
 }

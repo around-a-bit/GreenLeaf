@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,129 +12,46 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Custom CSS -->
     <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: #f5f6fa;
-        }
-
-        .layout {
-            display: flex;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 240px;
-            height: 100vh;
-            background: #111827;
-            color: #fff;
-            position: fixed;
-            transition: 0.3s;
-        }
-
-        .logo {
-            padding: 20px;
-            text-align: center;
-            font-weight: bold;
-            background: #1f2937;
-        }
-
-        .menu-item {
-            display: block;
-            padding: 12px 20px;
-            color: #d1d5db;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .menu-item:hover {
-            background: #374151;
-            color: #fff;
-        }
-
-        .menu-item i {
-            margin-right: 10px;
-        }
-
-        /* Main */
-        .main {
-            margin-left: 240px;
-            width: 100%;
-        }
-
-        /* Topbar */
-        .topbar {
-            background: #fff;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .search {
-            width: 300px;
-            padding: 6px 10px;
-        }
-
-        .user {
-            display: flex;
-            align-items: center;
-        }
-
-        /* Content */
-        .content {
-            padding: 20px;
-        }
-
-        /* Mobile */
-        @media(max-width:768px) {
-            .sidebar {
-                left: -240px;
-                position: fixed;
-            }
-
-            .sidebar.active {
-                left: 0;
-            }
-
-            .main {
-                margin-left: 0;
-            }
-        }
+        body { margin:0; font-family:'Segoe UI'; background:#f5f6fa; }
+        .layout { display:flex; }
+        .sidebar { width:240px; height:100vh; background:#111827; color:#fff; position:fixed; }
+        .logo { padding:20px; text-align:center; background:#1f2937; }
+        .menu-item { display:block; padding:12px 20px; color:#d1d5db; text-decoration:none; }
+        .menu-item:hover { background:#374151; color:#fff; }
+        .main { margin-left:240px; width:100%; }
+        .topbar { background:#fff; padding:12px 20px; display:flex; justify-content:space-between; }
+        .content { padding:20px; }
     </style>
 </head>
 
 <body>
 
 <?php
-$shopStatus = $shopStatus ?? null;
-$shopMenus = $menus ?? [];
+$shopStatus = session('status'); 
+$shopMenus  = config('ShopOwnerMenu')->menus;
 ?>
 
 <div class="layout">
 
     <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
+    <div class="sidebar">
         <h4 class="logo">🌱 Shop Panel</h4>
 
         <?php foreach ($shopMenus as $key => $menu): ?>
 
             <?php if ($shopStatus == 1): ?>
-                <a href="<?= base_url('shop/' . $menu['route']) ?>" class="menu-item">
-                    <i class="fa <?= $menu['icon'] ?>"></i>
-                    <?= $menu['label'] ?>
+                <!-- Approved -->
+                <a href="<?= base_url('shop_owner/'.$menu['route']) ?>" class="menu-item">
+                    <i class="fa <?= $menu['icon'] ?>"></i> <?= $menu['label'] ?>
                 </a>
 
-            <?php else: ?>
-                <?php if ($key === 'dashboard'): ?>
-                    <a href="<?= base_url('shop/dashboard') ?>" class="menu-item">
-                        <i class="fa <?= $menu['icon'] ?>"></i>
-                        <?= $menu['label'] ?>
-                    </a>
-                <?php endif; ?>
+            <?php elseif ($key === 'dashboard'): ?>
+                <!-- Only dashboard -->
+                <a href="<?= base_url('shop_owner/dashboard') ?>" class="menu-item">
+                    <i class="fa <?= $menu['icon'] ?>"></i> <?= $menu['label'] ?>
+                </a>
+
             <?php endif; ?>
 
         <?php endforeach; ?>
@@ -146,42 +62,46 @@ $shopMenus = $menus ?? [];
 
         <!-- Topbar -->
         <div class="topbar">
-            <button class="btn btn-dark btn-sm" onclick="toggleSidebar()">☰</button>
 
-            <input type="text" class="form-control search" placeholder="Search...">
+            <span>ID: <?= session('user_id') ?></span>
 
-            <div class="user">
-                <span>ID: <?= session('user_id') ?></span>
-
-                <?php if ($shopStatus === 0): ?>
-                    <span class="badge bg-warning ms-2">Pending</span>
-                <?php elseif ($shopStatus === 1): ?>
-                    <span class="badge bg-success ms-2">Approved</span>
-                <?php elseif ($shopStatus === 2): ?>
-                    <span class="badge bg-danger ms-2">Rejected</span>
+            <div>
+                <?php if ($shopStatus == 0): ?>
+                    <span class="badge bg-warning">Pending</span>
+                <?php elseif ($shopStatus == 1): ?>
+                    <span class="badge bg-success">Approved</span>
+                <?php elseif ($shopStatus == 2): ?>
+                    <span class="badge bg-danger">Rejected</span>
                 <?php endif; ?>
 
-                <form action="<?= base_url('shopOwner/logout') ?>" method="post" class="ms-2">
+                <form action="<?= base_url('shop_owner/logout') ?>" method="post" style="display:inline;">
                     <?= csrf_field() ?>
                     <button class="btn btn-danger btn-sm">Logout</button>
                 </form>
             </div>
+
         </div>
 
         <!-- Content -->
         <div class="content">
+
+            <!-- 🔥 STATUS ALERT -->
+            <?php if ($shopStatus == 0): ?>
+                <div class="alert alert-warning">
+                    ⏳ Your account is under review by admin
+                </div>
+            <?php elseif ($shopStatus == 2): ?>
+                <div class="alert alert-danger">
+                    ❌ Your account was rejected. Contact admin.
+                </div>
+            <?php endif; ?>
+
             <?= $this->renderSection('content') ?>
         </div>
 
     </div>
 
 </div>
-
-<script>
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('active');
-}
-</script>
 
 </body>
 </html>

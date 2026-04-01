@@ -12,7 +12,7 @@ public function before(RequestInterface $request, $arguments = null)
 {
     // Not logged in
     if (!session()->get('logged_in')) {
-        return redirect()->to('/admin/login');
+        return redirect()->to('/');
     }
 
     $role = session('role');
@@ -30,8 +30,8 @@ public function before(RequestInterface $request, $arguments = null)
                 case 'customer':
                     return redirect()->to('/customer/dashboard');
 
-                case 'shop':
-                    return redirect()->to('/shop/dashboard');
+                case 'shop_owner':
+                    return redirect()->to('/shopOwner/dashboard');
 
                 case 'delivery':
                     return redirect()->to('/delivery/dashboard');

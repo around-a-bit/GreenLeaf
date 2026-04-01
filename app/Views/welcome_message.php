@@ -14,7 +14,8 @@
     <div class="mt-4">
         <a href="<?= base_url('admin/login') ?>" class="btn btn-dark m-2">Admin</a>
         <a href="<?= base_url('customer/login') ?>" class="btn btn-success m-2">Customer</a>
-        <a href="<?= base_url('shopOwner/login') ?>" class="btn btn-warning m-2">Shop Owner</a>
+        <a href="<?= base_url('shopOwner/login') ?>" class="btn btn-warning m-2">Shop Owner Login</a>
+        <a href="<?= base_url('shopOwner/register') ?>" class="btn btn-warning m-2">Shop Owner Register</a>
         <a href="<?= base_url('delivery/login') ?>" class="btn btn-info m-2">Delivery</a>
     </div>
 
