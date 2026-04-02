@@ -3,26 +3,25 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Models\Products;
+use App\Models\ProductImages;
 
-class Orders extends Model
+class CartItems extends Model
 {
-    protected $table            = 'orders';
+    protected $table            = 'cart_items';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields = [
-        'shop_id',
-        'customer_id',
-        'address_id',          // ✅ ADD
-        'total_amount',
-        'commission_amount',
-        'net_amount',
-        'payment_method',      // ✅ ADD
-        'payment_status',      // ✅ ADD
-        'status'
+        protected $allowedFields = [
+        'user_id',
+        'product_id',
+        'quantity',
+        'price'
     ];
+
+
 
     protected bool $allowEmptyInserts = false;
 
@@ -49,4 +48,25 @@ class Orders extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getCart($userId)
+{
+    $productModel = new Products();
+    $imageModel   = new ProductImages();
+
+    $productsTable = $productModel->table;
+    $imagesTable   = $imageModel->table;
+
+    return $this
+        ->select("
+            cart_items.*,
+            {$productsTable}.name,
+            MIN({$imagesTable}.image_path) as image
+        ")
+        ->join($productsTable, "{$productsTable}.id = cart_items.product_id")
+        ->join($imagesTable, "{$imagesTable}.product_id = {$productsTable}.id", 'left')
+        ->where('cart_items.user_id', $userId)
+        ->groupBy('cart_items.id')
+        ->findAll();
+}
 }

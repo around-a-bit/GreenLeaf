@@ -4,30 +4,36 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Orders extends Model
+class CustomerAddresses extends Model
 {
-    protected $table            = 'orders';
+    protected $table            = 'customer_addresses';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields = [
-        'shop_id',
-        'customer_id',
-        'address_id',          // ✅ ADD
-        'total_amount',
-        'commission_amount',
-        'net_amount',
-        'payment_method',      // ✅ ADD
-        'payment_status',      // ✅ ADD
+     protected $allowedFields = [
+        'user_id',
+        'type',
+        'full_name',
+        'phone',
+        'address_line1',
+        'address_line2',
+        'landmark',
+        'city',
+        'state',
+        'country',
+        'pincode',
+        'latitude',
+        'longitude',
+        'is_default',
         'status'
     ];
 
     protected bool $allowEmptyInserts = false;
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';

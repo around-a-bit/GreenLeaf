@@ -9,7 +9,7 @@ class CreateProductsTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => ['type' => 'INT','auto_increment' => true],
+            'id' => ['type' => 'INT', 'unsigned' => true,'auto_increment' => true],
             'shop_id' => ['type' => 'INT'],
             'category_id' => ['type' => 'INT'],
             'name' => ['type' => 'VARCHAR','constraint' => 150],

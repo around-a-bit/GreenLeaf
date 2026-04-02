@@ -41,9 +41,52 @@ $routes->post('delivery/login', 'Delivery\Auth::loginPost');
 // ================= AUTH REQUIRED =================
 
 // CUSTOMER
+
+// $routes->group('customer', ['filter' => 'auth:customer'], function ($routes) {
+//     $routes->get('dashboard', 'Customer\Dashboard::index',['filter' => 'permission:dashboard']);
+//     $routes->get('orders', 'Customer\Order::index',['filter' => 'permission:dashboard']);
+
+//     $routes->get('profile', 'Customer\Profile::index',['filter' => 'permission:profile']);
+//     $routes->post('profile/update', 'Customer\Profile::update',['filter' => 'permission:profile']);
+
+//     $routes->post('address/update-location', 'Customer\Dashboard::updateLocation',['filter' => 'permission:address']);
+//     $routes->get('address/products-nearby', 'Customer\Dashboard::getNearbyProducts',['filter' => 'permission:address']);
+
+//     $routes->post('logout', 'Customer\Auth::logout');
+// });
+
 $routes->group('customer', ['filter' => 'auth:customer'], function ($routes) {
-    $routes->get('dashboard', 'Customer\Dashboard::index');
-    $routes->get('orders', 'Customer\Order::index');
+
+    // Dashboard
+    $routes->get('dashboard', 'Customer\Dashboard::index',['filter' => 'permission:dashboard']);
+    $routes->get('orders', 'Customer\Order::index',['filter' => 'permission:dashboard']);
+
+    // Profile
+    $routes->get('profile', 'Customer\Profile::index',['filter' => 'permission:profile']);
+    $routes->post('profile/update', 'Customer\Profile::update',['filter' => 'permission:profile']);
+
+    // 📍 LIVE LOCATION (DO NOT TOUCH)
+    $routes->post('address/update-location', 'Customer\Dashboard::updateLocation',['filter' => 'permission:address']);
+    $routes->get('address/products-nearby', 'Customer\Dashboard::getNearbyProducts',['filter' => 'permission:address']);
+
+    // 🏠 SAVED ADDRESSES (NEW MODULE)
+    $routes->get('address', 'Customer\AddressController::index',['filter' => 'permission:address']);
+    $routes->get('address/create', 'Customer\AddressController::create',['filter' => 'permission:address']);
+    $routes->post('address/store', 'Customer\AddressController::store',['filter' => 'permission:address']);
+
+    $routes->get('address/edit/(:num)', 'Customer\AddressController::edit/$1',['filter' => 'permission:address']);
+    $routes->post('address/update/(:num)', 'Customer\AddressController::update/$1',['filter' => 'permission:address']);
+
+    $routes->get('address/delete/(:num)', 'Customer\AddressController::delete/$1',['filter' => 'permission:address']);
+    $routes->get('address/set-default/(:num)', 'Customer\AddressController::setDefault/$1',['filter' => 'permission:address']);
+
+    // Cart
+    $routes->post('cart/add', 'Customer\CartController::add',['filter' => 'permission:cart']);
+    $routes->get('cart', 'Customer\CartController::index',['filter' => 'permission:cart']);
+    $routes->get('cart/remove/(:num)', 'Customer\CartController::remove/$1',['filter' => 'permission:cart']);
+    $routes->post('cart/update', 'Customer\CartController::update',['filter' => 'permission:cart']);
+    // Logout
+    $routes->post('logout', 'Customer\Auth::logout');
 });
 
 // SHOP OWNER

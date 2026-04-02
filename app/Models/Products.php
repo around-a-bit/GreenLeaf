@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Models\Shops;
+use App\Models\ProductImages;
 
 class Products extends Model
 {
@@ -86,6 +88,7 @@ class Products extends Model
     {
         return $this->where('status', self::STATUS_REJECTED);
     }
+    
 
 
     public function withCategory()
@@ -109,4 +112,43 @@ class Products extends Model
         return $this->where('status', self::STATUS_APPROVED)
             ->where('is_active', 1);
     }
+
+
+public function getNearby($lat, $lng)
+{
+    $shopsModel  = new Shops();
+    $imagesModel = new ProductImages();
+
+    $shopsTable  = $shopsModel->table;
+    $imagesTable = $imagesModel->table;
+    $productsTable = $this->table;
+
+    return $this->select("
+            {$productsTable}.*,
+            {$shopsTable}.shop_name,
+            {$shopsTable}.lat as shop_lat,
+            {$shopsTable}.lng as shop_lng,
+            {$imagesTable}.image_path as image,
+
+            (6371 * acos(
+                cos(radians($lat)) * cos(radians({$shopsTable}.lat)) *
+                cos(radians({$shopsTable}.lng) - radians($lng)) +
+                sin(radians($lat)) * sin(radians({$shopsTable}.lat))
+            )) AS distance
+        ")
+        ->join($shopsTable, "{$shopsTable}.id = {$productsTable}.shop_id")
+        ->join($imagesTable, "{$imagesTable}.product_id = {$productsTable}.id", 'left')
+
+        ->where("{$productsTable}.status", self::STATUS_APPROVED)
+        ->where("{$productsTable}.is_active", 1)
+
+        ->where("{$shopsTable}.lat IS NOT NULL")
+        ->where("{$shopsTable}.lng IS NOT NULL")
+
+        ->having('distance <', 50)
+        ->orderBy('distance', 'ASC')
+        ->groupBy("{$productsTable}.id")
+
+        ->findAll();
+}
 }
