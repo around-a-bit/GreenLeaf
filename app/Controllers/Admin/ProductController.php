@@ -4,20 +4,33 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\Products;
+use App\Models\ProductImages;
+
+
+
 
 class ProductController extends BaseController
 {
-    public function index()
-    {
-        $model = new Products();
 
-        $products = $model
-            ->select('products.*, categories.name as category')
-            ->join('categories', 'categories.id = products.category_id', 'left')
+
+public function index()
+{
+    $productModel = new Products();
+    $imageModel   = new ProductImages();
+
+    $products = $productModel
+        ->withCategory()
+        ->orderBy('id', 'DESC') 
+        ->findAll();
+        
+    foreach ($products as &$p) {
+        $p['images'] = $imageModel
+            ->where('product_id', $p['id'])
             ->findAll();
-
-        return view('admin/products/index', compact('products'));
     }
+    return view('admin/products/index', compact('products'));
+}
+
 
 public function updateStatus()
 {
